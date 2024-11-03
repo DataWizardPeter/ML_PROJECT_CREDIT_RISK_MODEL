@@ -60,27 +60,49 @@ st.markdown(
 # Input section
 st.subheader("Input Parameters")
 
-# Arrange inputs in 3 columns and 4 rows
+# Arrange inputs as per the requested layout in 3 columns and multiple rows
 col1, col2, col3 = st.columns(3)
 
+# Row 1
 with col1:
-    income = st.number_input('Income (Annual)', min_value=0, value=1200000, format="%d")
-    loan_amount = st.number_input('Loan Amount', min_value=0, value=2560000, format="%d")
-    loan_to_income_ratio = loan_amount / income if income > 0 else 0
-    st.metric(label="Loan to Income Ratio", value=f"{loan_to_income_ratio:.2f}")
-    avg_dpd_per_delinquency = st.number_input('Avg Days Past Due (DPD)', min_value=0, value=20)
-    loan_purpose = st.selectbox('Loan Purpose', ['Education', 'Home', 'Auto', 'Personal'])
+    age = st.number_input('Age', min_value=18, step=1, max_value=100, value=28)
 
 with col2:
-    age = st.number_input('Age', min_value=18, step=1, max_value=100, value=28)
-    loan_tenure_months = st.number_input('Loan Tenure (months)', min_value=0, step=1, value=36)
-    delinquency_ratio = st.number_input('Delinquency Ratio (%)', min_value=0, max_value=100, step=1, value=30)
-    loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
+    income = st.number_input('Income (Annual)', min_value=0, value=1200000, format="%d")
 
 with col3:
+    loan_amount = st.number_input('Loan Amount', min_value=0, value=2560000, format="%d")
+
+# Row 2
+with col1:
+    loan_to_income_ratio = loan_amount / income if income > 0 else 0
+    st.metric(label="Loan to Income Ratio", value=f"{loan_to_income_ratio:.2f}")
+
+with col2:
+    loan_tenure_months = st.number_input('Loan Tenure (months)', min_value=0, step=1, value=36)
+
+with col3:
+    avg_dpd_per_delinquency = st.number_input('Avg Days Past Due (DPD)', min_value=0, value=20)
+
+# Row 3
+with col1:
+    delinquency_ratio = st.number_input('Delinquency Ratio (%)', min_value=0, max_value=100, step=1, value=30)
+
+with col2:
     credit_utilization_ratio = st.number_input('Credit Utilization Ratio (%)', min_value=0, max_value=100, step=1, value=30)
+
+with col3:
     num_open_accounts = st.number_input('Number of Open Loan Accounts', min_value=1, max_value=4, step=1, value=2)
+
+# Row 4
+with col1:
     residence_type = st.selectbox('Residence Type', ['Owned', 'Rented', 'Mortgage'])
+
+with col2:
+    loan_purpose = st.selectbox('Loan Purpose', ['Education', 'Home', 'Auto', 'Personal'])
+
+with col3:
+    loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
 
 # Button to calculate risk
 if st.button('Calculate Risk', key='calculate'):
