@@ -1,7 +1,6 @@
 import streamlit as st
 from prediction_helper import predict  # Ensure this is correctly linked to your prediction_helper.py
 import base64
-import os
 
 # Function to load the image and convert it to a base64 string
 def get_base64_of_bin_file(bin_file):
@@ -10,40 +9,42 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 # Set the path to your local image file
-background_image_path = "risk-protection-eliminating-risk-top-view.jpg"  # Update with actual file path
-if os.path.exists(background_image_path):
-    base64_background = get_base64_of_bin_file(background_image_path)
-else:
-    base64_background = None
+background_image = r"risk-protection-eliminating-risk-top-view.jpg"  # Update this with your actual file path
+base64_background = get_base64_of_bin_file(background_image)
 
 # Set the page configuration and title
 st.set_page_config(page_title="Capital Crest Finance: Credit Risk Modelling", page_icon="📊")
 
-# Add custom CSS for background image if available
-if base64_background:
-    st.markdown(
-        f"""
-        <style>
+# Add custom CSS for background image and mobile responsiveness
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{base64_background}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {{
         .stApp {{
-            background-image: url("data:image/jpg;base64,{base64_background}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-size: contain;
         }}
-        
-        /* Responsive design for mobile */
-        @media (max-width: 768px) {{
-            .stApp {{
-                background-size: contain;
-            }}
+        .stMarkdown h1 {{
+            font-size: 1.5em;
         }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+        .stContainer {{
+            padding: 1em;
+        }}
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-# Adding title with white color
+# Adding title with light gray color
 st.markdown(
     '<h1 style="color:white;">Capital Crest Finance: Credit Risk Modelling</h1>',
     unsafe_allow_html=True
@@ -58,8 +59,11 @@ st.markdown(
 
 # Input section
 st.subheader("Input Parameters")
-with st.container():
-    age = st.number_input('Age', min_value=18, max_value=100, value=28)
+input_card = st.container()
+
+# Simplify input layout for mobile compatibility
+with input_card:
+    age = st.number_input('Age', min_value=18, step=1, max_value=100, value=28)
     income = st.number_input('Income (Annual)', min_value=0, value=1200000, format="%d")
     loan_amount = st.number_input('Loan Amount', min_value=0, value=2560000, format="%d")
     
@@ -74,13 +78,13 @@ with st.container():
     credit_utilization_ratio = st.number_input('Credit Utilization Ratio (%)', min_value=0, max_value=100, step=1, value=30)
     num_open_accounts = st.number_input('Number of Open Loan Accounts', min_value=1, max_value=4, step=1, value=2)
 
-    # Dropdowns for additional attributes
+    # Input controls for dropdowns
     residence_type = st.selectbox('Residence Type', ['Owned', 'Rented', 'Mortgage'])
     loan_purpose = st.selectbox('Loan Purpose', ['Education', 'Home', 'Auto', 'Personal'])
     loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
 
 # Button to calculate risk
-if st.button('Calculate Risk'):
+if st.button('Calculate Risk', key='calculate'):
     with st.spinner("Calculating..."):
         # Call the predict function from the helper module
         probability, credit_score, rating = predict(
@@ -88,16 +92,17 @@ if st.button('Calculate Risk'):
             delinquency_ratio, credit_utilization_ratio, num_open_accounts,
             residence_type, loan_purpose, loan_type
         )
-        # Display the results
+        # Display the results in a card format
         st.success("Calculation Complete!")
         st.subheader("Results")
-        with st.container():
+        results_card = st.container()
+        with results_card:
             st.metric(label="Default Probability", value=f"{probability:.2%}")
             st.metric(label="Credit Score", value=f"{credit_score}")
             st.metric(label="Rating", value=f"{rating}")
 
-# Sidebar content
+# Optional footer
 st.sidebar.header("Navigation")
 st.sidebar.write("Use the options below to navigate through the app.")
 st.sidebar.markdown("### About")
-st.sidebar.write("This app is designed for Capital Crest to assess credit risk for loan applicants, evaluating various financial and demographic factors.")
+st.sidebar.write("This application is designed specifically for Capital Crest to assess credit risk for potential loan applicants. The app evaluates financial and demographic factors to provide a credit risk assessment.")
