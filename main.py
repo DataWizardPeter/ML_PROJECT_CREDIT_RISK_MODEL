@@ -2,6 +2,9 @@ import streamlit as st
 from prediction_helper import predict  # Ensure this is correctly linked to your prediction_helper.py
 import base64
 
+# Set the page configuration before any other Streamlit commands
+st.set_page_config(page_title="Capital Crest Finance: Credit Risk Modelling", page_icon="📊")
+
 # Cache the image loading function to avoid reloading each time
 @st.cache_data
 def get_base64_of_bin_file(bin_file):
@@ -12,9 +15,6 @@ def get_base64_of_bin_file(bin_file):
 # Set the path to your local image file
 background_image = r"risk-protection-eliminating-risk-top-view.jpg"  # Update with your actual file path
 base64_background = get_base64_of_bin_file(background_image)
-
-# Set the page configuration and title
-st.set_page_config(page_title="Capital Crest Finance: Credit Risk Modelling", page_icon="📊")
 
 # Adding title with light gray color
 st.markdown(
