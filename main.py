@@ -2,14 +2,15 @@ import streamlit as st
 from prediction_helper import predict  # Ensure this is correctly linked to your prediction_helper.py
 import base64
 
-# Function to load the image and convert it to a base64 string
+# Cache the image loading function to avoid reloading each time
+@st.cache_data
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
 # Set the path to your local image file
-background_image = r"risk-protection-eliminating-risk-top-view.jpg"  # Update this with your actual file path
+background_image = r"risk-protection-eliminating-risk-top-view.jpg"  # Update with your actual file path
 base64_background = get_base64_of_bin_file(background_image)
 
 # Set the page configuration and title
@@ -37,7 +38,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Create a sidebar for additional navigation or information
+# Sidebar navigation and static content (loads only once)
 st.sidebar.header("Navigation")
 st.sidebar.write("Use the options below to navigate through the app.")
 
@@ -54,7 +55,7 @@ with st.container():
     input_card = st.container()
 
     with input_card:
-        # Create rows of three columns each for input fields
+        # Use rows of three columns each for input fields
         row1 = st.columns(3)
         row2 = st.columns(3)
         row3 = st.columns(3)
@@ -96,14 +97,23 @@ with st.container():
         with row4[2]:
             loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
 
+    # Cache the prediction function to avoid recalculating for same inputs
+    @st.cache_data
+    def get_prediction(age, income, loan_amount, loan_tenure_months, avg_dpd_per_delinquency,
+                       delinquency_ratio, credit_utilization_ratio, num_open_accounts,
+                       residence_type, loan_purpose, loan_type):
+        return predict(age, income, loan_amount, loan_tenure_months,
+                       avg_dpd_per_delinquency, delinquency_ratio, credit_utilization_ratio, 
+                       num_open_accounts, residence_type, loan_purpose, loan_type)
+
     # Button to calculate risk
     if st.button('Calculate Risk', key='calculate'):
         with st.spinner("Calculating..."):
-            # Call the predict function from the helper module
-            probability, credit_score, rating = predict(age, income, loan_amount, loan_tenure_months,
-                                                        avg_dpd_per_delinquency,
-                                                        delinquency_ratio, credit_utilization_ratio, num_open_accounts,
-                                                        residence_type, loan_purpose, loan_type)
+            # Call the cached prediction function
+            probability, credit_score, rating = get_prediction(age, income, loan_amount, loan_tenure_months,
+                                                               avg_dpd_per_delinquency, delinquency_ratio, 
+                                                               credit_utilization_ratio, num_open_accounts,
+                                                               residence_type, loan_purpose, loan_type)
 
             # Display the results in a card format
             st.success("Calculation Complete!")
@@ -114,6 +124,6 @@ with st.container():
                 st.metric(label="Credit Score", value=f"{credit_score}")
                 st.metric(label="Rating", value=f"{rating}")
 
-# Optional footer
+# Sidebar information about the application (static content)
 st.sidebar.markdown("### About")
 st.sidebar.write("This application is designed specifically for Capital Crest to assess credit risk for potential loan applicants. Using a custom-built model, the app evaluates various financial and demographic factors to provide a credit risk assessment. This model is fine-tuned to align with Capital Crest's unique lending criteria and risk management goals, ensuring a robust and tailored approach to decision-making.")
