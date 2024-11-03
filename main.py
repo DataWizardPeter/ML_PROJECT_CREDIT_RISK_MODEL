@@ -65,7 +65,7 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     age = st.number_input('Age', min_value=18, step=1, max_value=100, value=28)
-    loan_amount = st.number_input('Loan Amount', min_value=0, value=2560000, format="%d")
+    loan_to_income_ratio = loan_amount / income if income > 0 else 0
     avg_dpd_per_delinquency = st.number_input('Avg Days Past Due (DPD)', min_value=0, value=20)
     loan_purpose = st.selectbox('Loan Purpose', ['Education', 'Home', 'Auto', 'Personal'])
 
@@ -76,7 +76,7 @@ with col2:
     loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
 
 with col3:
-    loan_to_income_ratio = loan_amount / income if income > 0 else 0
+    loan_amount = st.number_input('Loan Amount', min_value=0, value=2560000, format="%d")
     st.metric(label="Loan to Income Ratio", value=f"{loan_to_income_ratio:.2f}")
     credit_utilization_ratio = st.number_input('Credit Utilization Ratio (%)', min_value=0, max_value=100, step=1, value=30)
     num_open_accounts = st.number_input('Number of Open Loan Accounts', min_value=1, max_value=4, step=1, value=2)
