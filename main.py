@@ -59,29 +59,28 @@ st.markdown(
 
 # Input section
 st.subheader("Input Parameters")
-input_card = st.container()
 
-# Simplify input layout for mobile compatibility
-with input_card:
+# Arrange inputs in 3 columns and 4 rows
+col1, col2, col3 = st.columns(3)
+
+with col1:
     age = st.number_input('Age', min_value=18, step=1, max_value=100, value=28)
-    income = st.number_input('Income (Annual)', min_value=0, value=1200000, format="%d")
     loan_amount = st.number_input('Loan Amount', min_value=0, value=2560000, format="%d")
-    
-    # Loan to Income Ratio Calculation
+    avg_dpd_per_delinquency = st.number_input('Avg Days Past Due (DPD)', min_value=0, value=20)
+    loan_purpose = st.selectbox('Loan Purpose', ['Education', 'Home', 'Auto', 'Personal'])
+
+with col2:
+    income = st.number_input('Income (Annual)', min_value=0, value=1200000, format="%d")
+    loan_tenure_months = st.number_input('Loan Tenure (months)', min_value=0, step=1, value=36)
+    delinquency_ratio = st.number_input('Delinquency Ratio (%)', min_value=0, max_value=100, step=1, value=30)
+    loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
+
+with col3:
     loan_to_income_ratio = loan_amount / income if income > 0 else 0
     st.metric(label="Loan to Income Ratio", value=f"{loan_to_income_ratio:.2f}")
-    
-    # Additional inputs
-    loan_tenure_months = st.number_input('Loan Tenure (months)', min_value=0, step=1, value=36)
-    avg_dpd_per_delinquency = st.number_input('Avg Days Past Due (DPD)', min_value=0, value=20)
-    delinquency_ratio = st.number_input('Delinquency Ratio (%)', min_value=0, max_value=100, step=1, value=30)
     credit_utilization_ratio = st.number_input('Credit Utilization Ratio (%)', min_value=0, max_value=100, step=1, value=30)
     num_open_accounts = st.number_input('Number of Open Loan Accounts', min_value=1, max_value=4, step=1, value=2)
-
-    # Input controls for dropdowns
     residence_type = st.selectbox('Residence Type', ['Owned', 'Rented', 'Mortgage'])
-    loan_purpose = st.selectbox('Loan Purpose', ['Education', 'Home', 'Auto', 'Personal'])
-    loan_type = st.selectbox('Loan Type', ['Unsecured', 'Secured'])
 
 # Button to calculate risk
 if st.button('Calculate Risk', key='calculate'):
