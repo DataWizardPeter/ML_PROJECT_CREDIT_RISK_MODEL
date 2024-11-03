@@ -116,4 +116,5 @@ with st.container():
 
 # Optional footer
 st.sidebar.markdown("### About")
-st.sidebar.write("This application is designed to assess credit risk for potential loan applicants.")
+st.sidebar.write("This application is designed specifically for Capital Crest to assess credit risk for potential loan applicants. Using a custom-built model, the app evaluates various financial and demographic factors to provide a credit risk assessment. This model is fine-tuned to align with Capital Crest's unique lending criteria and risk management goals, ensuring a robust and tailored approach to decision-making.")
+
