@@ -9,7 +9,7 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 # Set the path to your local image file
-background_image = r"C:\Users\peter\ML_PROJECT_CREDIT_RISK_MODEL\risk-protection-eliminating-risk-top-view.jpg"  # Update this with your actual file path
+background_image = r"risk-protection-eliminating-risk-top-view.jpg"  # Update this with your actual file path
 base64_background = get_base64_of_bin_file(background_image)
 
 # Set the page configuration and title
