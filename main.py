@@ -9,7 +9,7 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 # Set the path to your local image file
-background_image = "risk-protection-eliminating-risk-top-view.jpg"  # Update this with your actual file path
+background_image = "risk-protection.jpg"  # Update this with your actual file path
 base64_background = get_base64_of_bin_file(background_image)
 
 # Set the page configuration and title (must be first Streamlit command)
